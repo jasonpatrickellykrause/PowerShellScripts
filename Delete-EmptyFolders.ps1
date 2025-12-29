@@ -7,9 +7,10 @@ $directories = Get-ChildItem -Path $targetDirectory -Directory -Recurse
 
 foreach ($directory in $directories) {
     # Check if the directory is empty
-    if (-Not (Get-ChildItem -Path $directory.FullName)) {
-        # Delete the empty directory
-        Remove-Item -Path $directory.FullName -Force
+    if (-Not (Get-ChildItem -Path $directory.FullName -File -Recurse)) {
+        Remove-Item -Path $directory.FullName -Force -Recurse
         Write-Output "Deleted empty folder: $($directory.FullName)"
     }
 }
+
+

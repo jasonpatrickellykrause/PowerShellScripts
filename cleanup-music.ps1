@@ -4,7 +4,7 @@
 $directory = "D:\data\media\music"
 
 # Define the file types to delete (e.g., .txt, .log)
-$fileTypes = @("*.nfo", "*.jpg", "*.lrc")
+$fileTypes = @("*.png", "*.nfo", "*.jpg", "*.lrc")
 
 # Loop through each file type and delete the files
 foreach ($fileType in $fileTypes) {

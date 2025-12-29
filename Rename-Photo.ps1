@@ -3,10 +3,10 @@
 # dir *.jpg | % { Rename-Photo $_.FullName "iPhoneLB" "Martinique" }
 
 function rename-photo(
-    [ValidateScript({Test-Path $_})][string]$fileName,
+	[ValidateScript({ Test-Path $_ })][string]$fileName,
 	[String]$device,
 	[String]$location,
-    [int]$AddHours){
+	[int]$AddHours) {
 
 	if ($fileName -eq "") {
 		write-host "Please provide a filename!" -foregroundcolor "red"
@@ -43,9 +43,10 @@ function rename-photo(
 	if ($bitearr -ne $null) {
 
 		$string = [System.Text.Encoding]::ASCII.GetString($bitearr)
-		$exactDate = [datetime]::ParseExact($string,"yyyy:MM:dd HH:mm:ss`0",$Null)
+		$exactDate = [datetime]::ParseExact($string, "yyyy:MM:dd HH:mm:ss`0", $Null)
 
-    } else {
+	}
+ else {
 
 		# we could not extract an EXIF "Date Taken".
 		# perhaps we can one of these dates instead.
@@ -62,7 +63,7 @@ function rename-photo(
 		$exactDate = $exactDate.AddHours($AddHours)
 	}
 
-    $length = (dir $fileName | % length )
+	$length = (dir $fileName | % length )
 	$extensionWithDot = [io.path]::GetExtension($FileName)
 	$newName = ("{0:yyyy-MM-dd-HH-mm-ss}_{1}_{2}_{3}{4}" -f $exactDate, $device, $location, $length, $extensionWithDot)
 

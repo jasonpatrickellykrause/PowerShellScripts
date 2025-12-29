@@ -34,24 +34,24 @@
 
 #> 
 
-[CmdletBinding(DefaultParameterSetName="Default")]
+[CmdletBinding(DefaultParameterSetName = "Default")]
 
 # Define parameters and defaults
 
 param(
-    [parameter(ParameterSetName="Default", Position=0, Mandatory=$false)]
+    [parameter(ParameterSetName = "Default", Position = 0, Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
     [string] $Path = $($env:userprofile + "\OneDrive\Pictures\Camera Roll"),
 
-    [parameter(ParameterSetName="Default", Position=1, Mandatory=$false)]
+    [parameter(ParameterSetName = "Default", Position = 1, Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
     [string] $Confirm = $true,
 
-    [parameter(ParameterSetName="Default", Position=2, Mandatory=$false)]
+    [parameter(ParameterSetName = "Default", Position = 2, Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
     [string] $RenameIfExists = $true,
 
-    [parameter(ParameterSetName="Default", Position=3, Mandatory=$false)]
+    [parameter(ParameterSetName = "Default", Position = 3, Mandatory = $false)]
     [ValidateNotNullOrEmpty()]
     [string] $RemoveEmptyFolders = $true
 )
@@ -63,7 +63,7 @@ Set-StrictMode -Version Latest
 # Shows error, cancels script
 
 Function ShowError { 
-Param ([string] $Message)
+    Param ([string] $Message)
     $Message = $Message + “ – cmdlet was cancelled”
     Write-Error $Message -ErrorAction Stop
 }
@@ -75,18 +75,17 @@ if ($Path -eq "") {
 }
 
 if ($Path.EndsWith("\")) {
-    $Path = $Path.Substring(0, $Path.Length-1)
+    $Path = $Path.Substring(0, $Path.Length - 1)
 }
 
 if (-not (Test-Path $Path)) {
-    ShowError("Invalid Path - "+$Path)
+    ShowError("Invalid Path - " + $Path)
 }
 
 # Asks for confirmation
 
 if ($Confirm) {
 
-    Cls
     Write-Host "This script will organize files at <$Path> and all subfolders."
     Write-Host "Files will be moved to a folder named after the year and month the file was last written."
     Write-Host "This operation cannot be easily undone."
@@ -110,12 +109,12 @@ $FilesMoved = 0
 $FilesSkipped = 0
 $FoldersRemoved = 0
 
-dir $Path -Recurse -File | % {
+Get-ChildItem $Path -Recurse -File | ForEach-Object {
 
     # Get file and folder information
 
     $oldname = $_.FullName
-    $newsubfolder = "\"+$_.LastWriteTime.Year +"\" + $_.LastWriteTime.Month.ToString().PadLeft(2, "0")
+    $newsubfolder = "\" + $_.LastWriteTime.Year + "\" + $_.LastWriteTime.Month.ToString().PadLeft(2, "0")
     $newname = $Path + $newsubfolder + "\" + $_.Name
 
     # Need to move the file
@@ -125,7 +124,7 @@ dir $Path -Recurse -File | % {
         # Create the new folder if necessary
         
         $newfolder = $newname.Substring(0, $newname.LastIndexOf("\"))
-        MD $newfolder -ErrorAction SilentlyContinue | Out-Null
+        New-Item -ItemType Directory -Path $newfolder -ErrorAction SilentlyContinue | Out-Null
 
         # File already exists
         $SkipFile = $false
@@ -139,7 +138,8 @@ dir $Path -Recurse -File | % {
                 Write-Host "File <$newname> already exists at destination. Renaming to avoid conflict."
                 $newname = $newname.Replace(".", "-" + (New-Guid).Guid + ".") 
 
-            } else { 
+            }
+            else { 
 
                 Write-Host "File <$newname> already exists at destination. Skipping."
                 $SkipFile = $true
@@ -162,12 +162,12 @@ dir $Path -Recurse -File | % {
 
 if ($RemoveEmptyFolders -eq $true) {
 
-    dir $Path -Recurse -Directory | sort FullName -Descending | % {
+    Get-ChildItem $Path -Recurse -Directory | Sort-Object FullName -Descending | ForEach-Object {
 
         # if folder is empty
 
         $dirname = $_.FullName
-        if ((dir $dirname -Recurse) -eq $null) { 
+        if ((Get-ChildItem $dirname -Recurse) -eq $null) { 
 
             # remove folder
 

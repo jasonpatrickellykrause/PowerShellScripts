@@ -3,7 +3,7 @@
 
 # Configuration
 $PLEX_URL = "http://localhost:32400"  # Change to your Plex server URL
-$PLEX_TOKEN = "KA72SDXHmJQVi-Xrtn1-"  # Get from Plex settings
+$PLEX_TOKEN = "XXXXXXX"  # Get from Plex settings
 $MUSIC_LIBRARY_NAME = "Music"  # Change to your music library name
 
 
@@ -130,8 +130,6 @@ function Find-DuplicateAlbums {
     $duplicates = @{}
     foreach ($key in $albumGroups.Keys) {
         if ($albumGroups[$key].Count -gt 1) {
-            # Extract just the title for display
-            $title = $key.Split('|')[1]
             $duplicates[$key] = $albumGroups[$key]
         }
     }
@@ -271,9 +269,8 @@ try {
     $progress = 0
     foreach ($key in $duplicates.Keys) {
         $progress++
-        $title = $key.Split('|')[1]
         $folder = $key.Split('|')[0]
-        Write-Progress -Activity "Analyzing duplicates" -Status "Processing $title" -PercentComplete (($progress / $duplicates.Count) * 100)
+        Write-Progress -Activity "Analyzing duplicates" -Status "Processing $($key.Split('|')[1])" -PercentComplete (($progress / $duplicates.Count) * 100)
         
         $albumGroup = $duplicates[$key]
         $folderCheck = Test-SameFolder -Albums $albumGroup

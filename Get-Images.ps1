@@ -1,7 +1,7 @@
 ﻿#Requires -Version 4
 
 function Get-Images {
-<# 
+    <# 
  .SYNOPSIS
   Script to get image file information like 'DateTaken'
 
@@ -77,11 +77,11 @@ function Get-Images {
 
     [CmdletBinding()] 
     Param(
-    [Parameter(Mandatory=$true,  Position=0)]
+        [Parameter(Mandatory = $true, Position = 0)]
         [ValidateScript({ (Test-Path -Path $_) })]
         [String[]]$Source, 
-    [Parameter(Mandatory=$false, Position=1)]
-        [String[]]$Extension = @('.jpg','.gif')
+        [Parameter(Mandatory = $false, Position = 1)]
+        [String[]]$Extension = @('.jpg', '.gif')
     )
 
      
@@ -94,7 +94,7 @@ function Get-Images {
     $Folders += $Source
 
     $Images = @()
-    $objShell  = New-Object -ComObject Shell.Application
+    $objShell = New-Object -ComObject Shell.Application
     $Folders | % {
 
         $objFolder = $objShell.namespace($_)
@@ -108,18 +108,18 @@ function Get-Images {
                     FullName      = $File.Path
                     Size          = $File.Size
                     Type          = $File.Type
-                    Extension     = $objFolder.getDetailsOf($File,156)
-                    DateCreated   = $objFolder.getDetailsOf($File,3)
-                    DateModified  = $objFolder.getDetailsOf($File,4)
-                    DateAccessed  = $objFolder.getDetailsOf($File,5)
-                    DateTaken     = $objFolder.getDetailsOf($File,12)
-                    CameraModel   = $objFolder.getDetailsOf($File,30)
-                    CameraMaker   = $objFolder.getDetailsOf($File,32)
-                    BitDepth      = [int]$objFolder.getDetailsOf($File,165)
-                    HorizontalRes = $objFolder.getDetailsOf($File,166)
-                    VerticalRes   = $objFolder.getDetailsOf($File,168)
-                    Width         = $objFolder.getDetailsOf($File,167)
-                    Height        = $objFolder.getDetailsOf($File,169)
+                    Extension     = $objFolder.getDetailsOf($File, 156)
+                    DateCreated   = $objFolder.getDetailsOf($File, 3)
+                    DateModified  = $objFolder.getDetailsOf($File, 4)
+                    DateAccessed  = $objFolder.getDetailsOf($File, 5)
+                    DateTaken     = $objFolder.getDetailsOf($File, 12)
+                    CameraModel   = $objFolder.getDetailsOf($File, 30)
+                    CameraMaker   = $objFolder.getDetailsOf($File, 32)
+                    BitDepth      = [int]$objFolder.getDetailsOf($File, 165)
+                    HorizontalRes = $objFolder.getDetailsOf($File, 166)
+                    VerticalRes   = $objFolder.getDetailsOf($File, 168)
+                    Width         = $objFolder.getDetailsOf($File, 167)
+                    Height        = $objFolder.getDetailsOf($File, 169)
                 }
                 $Images += New-Object -TypeName psobject -Property $Props
 

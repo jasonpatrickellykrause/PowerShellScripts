@@ -14,8 +14,7 @@
 # Get-FileMetaData -folder (gci e:\music -Recurse -Directory).FullName
 # note: this MUST point to a folder, and not to a file.
 # -----------------------------------------------------------------------------
-Function Get-FileMetaData
-{
+Function Get-FileMetaData {
   <#
    .Synopsis
     This function gets file metadata and returns it as a custom PS Object 
@@ -53,28 +52,25 @@ Function Get-FileMetaData
      Http://www.ScriptingGuys.com
  #Requires -Version 2.0
  #>
- Param([string[]]$folder)
- foreach($sFolder in $folder)
-  {
-   $a = 0
-   $objShell = New-Object -ComObject Shell.Application
-   $objFolder = $objShell.namespace($sFolder)
+  Param([string[]]$folder)
+  foreach ($sFolder in $folder) {
+    $a = 0
+    $objShell = New-Object -ComObject Shell.Application
+    $objFolder = $objShell.namespace($sFolder)
 
-   foreach ($File in $objFolder.items())
-    { 
-     $FileMetaData = New-Object PSOBJECT
-      for ($a ; $a  -le 266; $a++)
-       { 
-         if($objFolder.getDetailsOf($File, $a))
-           {
-             $hash += @{$($objFolder.getDetailsOf($objFolder.items, $a))  =
-                   $($objFolder.getDetailsOf($File, $a)) }
-            $FileMetaData | Add-Member $hash
-            $hash.clear() 
-           } #end if
-       } #end for 
-     $a=0
-     $FileMetaData
+    foreach ($File in $objFolder.items()) { 
+      $FileMetaData = New-Object PSOBJECT
+      for ($a ; $a -le 266; $a++) { 
+        if ($objFolder.getDetailsOf($File, $a)) {
+          $hash += @{$($objFolder.getDetailsOf($objFolder.items, $a)) =
+            $($objFolder.getDetailsOf($File, $a)) 
+          }
+          $FileMetaData | Add-Member $hash
+          $hash.clear() 
+        } #end if
+      } #end for 
+      $a = 0
+      $FileMetaData
     } #end foreach $file
   } #end foreach $sfolder
 } #end Get-FileMetaData
